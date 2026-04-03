@@ -1,4 +1,5 @@
 use std::io;
+use std::io::Write;
 
 fn main() {
     
@@ -13,8 +14,6 @@ fn main() {
 
     println!("Basic Text Game!\n");
     
-    std::mem::drop(user_input);
-
     fn prompt_user() {
         println!("Press ENTER to continue");
         let mut input = String::new();
@@ -33,13 +32,13 @@ fn main() {
    
     prompt_user();
    
-    let stage: [&str; 3] = ["Stage 1","Stage 2","Stage 3"]; 
+    let stage: [&str; 3] = ["Stage 1\n","Stage 2\n","Stage 3\n"]; 
     
     println!("{}", stage[0]);
    
     prompt_user();
   
-    let _classes: [&str; 3] = ["Warrior", "Mage", "Rogue"];
+    let _classes: [&str; 3] = ["Warrior\n", "Mage\n", "Rogue\n"];
 
     struct Stats {
         strength: i32,
@@ -52,13 +51,57 @@ fn main() {
         magic: 0,
         stamina: 0,
     };
-    stats.strength += 1; 
-    println!("Strength {}, Stamina: {}, Magic: {}", stats.strength, stats.magic, stats.stamina);
+    
+    fn encounter() {
+        loop {  
+            println!("An enemy stands before you!");
+
+            let mut enemy_hp: i32 = 250;
+            let enemy_dmg: i32 = 25;
+            let mut user_hp: i32 = 500;
+            let user_dmg: i32 = 50;
+
+            let mut user_choice:String = String::new();
+
+            io::stdin()
+                .read_line(&mut user_choice)
+                .expect("Failed to read_line");
+                
+                println!("Attack or defend");
+         
+
+
+                if user_choice == "Attack"{
+                    println!("Success");
+                    enemy_hp -= user_dmg;
+                    println!("User HP: {} | Enemy HP: {}", user_hp, enemy_hp);
+                    break;
+                    
+
+                }
+                   
+                if user_choice == "Defend" {
+                    user_hp -= enemy_dmg;
+                    println!("You lost {}\n\nUser HP: {}", enemy_dmg, user_hp);
+                }else if enemy_hp == 0 {
+                    println!("Enemy defeated! {}", enemy_hp);
+                    break;
+                }
+                 
+        }
+}
+
+encounter();
+
+println!("{}, {}, {}", stats.strength, stats.magic, stats.stamina);
+}
+    
+
 
     
 
 
 
 
-}
+
 
