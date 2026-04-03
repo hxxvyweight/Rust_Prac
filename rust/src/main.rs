@@ -1,10 +1,9 @@
 use std::io;
-use std::io::Write;
 
 fn main() {
     
 
-    //Welcome input//
+    //Welcome input and User Prompts//
 
     println!("Welcome!");
 
@@ -25,7 +24,7 @@ fn main() {
            break;
     }
      
-
+    //Basic Level, Stage, Stats, and Available Class Names//
     const MAP: &str = "Map";
 
     println!("Welcome to {}\n", MAP);
@@ -52,56 +51,57 @@ fn main() {
         stamina: 0,
     };
     
+    //Basic Encounter System for Combat//
+
+
     fn encounter() {
+        
+        let mut enemy_hp: i32 = 250;
+        let enemy_dmg: i32 = 25;
+        let mut user_hp: i32 = 500;
+        let user_dmg: i32 = 50;
+
+
         loop {  
+            
             println!("An enemy stands before you!");
 
-            let mut enemy_hp: i32 = 250;
-            let enemy_dmg: i32 = 25;
-            let mut user_hp: i32 = 500;
-            let user_dmg: i32 = 50;
-
+            //Reading for User Input and assigning to variable//
+            
             let mut user_choice:String = String::new();
 
             io::stdin()
                 .read_line(&mut user_choice)
                 .expect("Failed to read_line");
-                
+                let user_choice = user_choice.trim();    
                 println!("Attack or defend");
-         
-
-
+                //Getting Input and Trimming Whitespace// 
+                
+                //Attack and Defend Prompt temporarily//
+                
                 if user_choice == "Attack"{
                     println!("Success");
                     enemy_hp -= user_dmg;
                     println!("User HP: {} | Enemy HP: {}", user_hp, enemy_hp);
-                    break;
+                    continue;
                     
-
-                }
-                   
-                if user_choice == "Defend" {
-                    user_hp -= enemy_dmg;
-                    println!("You lost {}\n\nUser HP: {}", enemy_dmg, user_hp);
-                }else if enemy_hp == 0 {
+                }else if enemy_hp <= 0 {
                     println!("Enemy defeated! {}", enemy_hp);
                     break;
-                }
-                 
+                }else if user_choice == "Defend" {
+                    user_hp -= enemy_dmg;
+                    println!("You lost {}\n\nUser HP: {}", enemy_dmg, user_hp);
+                    continue;
+                
+                 //End of Encounter// 
         }
+                  
+        }
+    }
+
+    encounter();
+
+
+    println!("{}, {}, {}", stats.strength, stats.magic, stats.stamina);
+
 }
-
-encounter();
-
-println!("{}, {}, {}", stats.strength, stats.magic, stats.stamina);
-}
-    
-
-
-    
-
-
-
-
-
-
