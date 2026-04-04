@@ -24,7 +24,7 @@ fn main() {
            break;
     }
      
-    //Basic Level, Stage, Stats, and Available Class Names//
+    //Basic Level, Stage, and Available Class Names//
     const MAP: &str = "Map";
 
     println!("Welcome to {}\n", MAP);
@@ -38,23 +38,53 @@ fn main() {
     prompt_user();
   
     let _classes: [&str; 3] = ["Warrior\n", "Mage\n", "Rogue\n"];
-
+    
+    //Character Stats and XP//
     struct Stats {
         strength: i32,
         magic: i32,
         stamina: i32,
     }
     
-    let mut stats = Stats {
-        strength: 0,
-        magic: 0,
-        stamina: 0,
+    let stats: Stats = Stats {
+        strength: 1,
+        magic: 1,
+        stamina: 1,
+    };
+        
+    struct XP {
+        level: u32,
+        current_xp: u32,
+        required_xp: u32,
+    }
+
+    let mut xp_pool: XP = XP {
+        level: 1,
+        current_xp: 0,
+        required_xp: 200,
     };
     
+
     //Basic Encounter System for Combat//
+    fn return_outcome(success: bool, level: &mut u32, current_xp: &mut u32, required_xp: &mut u32) {
+        
+        let mut encountered: bool = true;
+       
+        while encountered {
+            
+            if success {
+                *current_xp += 25;
+                *required_xp -= 25;
+                println!("Level: {}, Current XP: {}, Required: {}", level, current_xp, required_xp);
+                encountered = false;
+           } else {
+               println!("Try again!");
+            }
+        }
+    }
 
 
-    fn encounter() {
+    fn encounter() -> bool {
         
         let mut enemy_hp: i32 = 250;
         let enemy_dmg: i32 = 25;
@@ -64,44 +94,46 @@ fn main() {
 
         loop {  
             
-            println!("An enemy stands before you!");
+            let mut user_choice:String = String::new();
+            user_choice.clear();
+       
+            println!("An enemy stands before you!\n");
 
             //Reading for User Input and assigning to variable//
             
-            let mut user_choice:String = String::new();
+            println!("Attack or defend\n");
+           
 
             io::stdin()
                 .read_line(&mut user_choice)
                 .expect("Failed to read_line");
-                let user_choice = user_choice.trim();    
-                println!("Attack or defend");
+                let user_choice = user_choice.trim().to_lowercase();    
                 //Getting Input and Trimming Whitespace// 
+
                 
-                //Attack and Defend Prompt temporarily//
                 
-                if user_choice == "Attack"{
-                    println!("Success");
+                if user_choice == "attack"{
                     enemy_hp -= user_dmg;
-                    println!("User HP: {} | Enemy HP: {}", user_hp, enemy_hp);
-                    continue;
-                    
-                }else if enemy_hp <= 0 {
-                    println!("Enemy defeated! {}", enemy_hp);
-                    break;
+                    println!("\nUser HP: {} | Enemy HP: {}\n", user_hp, enemy_hp);
+
+                    if enemy_hp <= 0 {
+                        println!("Enemy defeated! {}\n", enemy_hp);
+                        return true;
+                
                 }else if user_choice == "Defend" {
                     user_hp -= enemy_dmg;
                     println!("You lost {}\n\nUser HP: {}", enemy_dmg, user_hp);
                     continue;
-                
-                 //End of Encounter// 
-        }
-                  
+                }
+                }
         }
     }
+    
 
-    encounter();
-
-
-    println!("{}, {}, {}", stats.strength, stats.magic, stats.stamina);
+    let success = encounter();
+    
+    return_outcome(success, &mut xp_pool.level, &mut xp_pool.current_xp, &mut xp_pool.required_xp);
+   
+    println!("- Strength: {}\n- Magic: {}\n- Stamina: {}\n", stats.strength, stats.magic, stats.stamina);
 
 }
